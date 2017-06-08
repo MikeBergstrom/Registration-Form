@@ -4,7 +4,7 @@ import re
 app= Flask(__name__)
 app.secret_key="sosecret"
 EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$')
-
+PASSWORD_REGEX = re.compile('\d.*[A-Z]|[A-Z].*\d')
 
 @app.route('/')
 def index():
@@ -24,6 +24,9 @@ def input():
         return redirect('/')
     elif request.form['password'] != request.form['confirm']:
         flash("Passwords do not match")
+        return redirect('/')
+    elif not PASSWORD_REGEX.match(request.form['password']):
+        flash("Password must contain at least one number and one capitol letter")
         return redirect('/')
     else:
         return redirect('/')
